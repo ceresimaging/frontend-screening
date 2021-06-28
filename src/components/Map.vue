@@ -1,13 +1,42 @@
+<style scoped>
+.popup h1 {
+  font-size: 15px;
+  text-align: center;
+}
+
+.popup p {
+  padding: 15px;
+  text-align: center;
+}
+</style>
+
 <template>
   <mapbox-map
     access-token="pk.eyJ1IjoibWF1cmltaXJhbmRhIiwiYSI6ImNqc3FsZ2JpaDE5OWI0NHA2dDI5aG5vdTcifQ.dQsXVmW2MgVsj0FhDrSeQA"
-    map-style="mapbox://styles/mapbox/light-v10"
-    :center="[0, 0]"
+    map-style="mapbox://styles/mapbox/dark-v10"
+    :center="mapCenter"
     :zoom="2"
     @mb-created="(mapInstance) => (map = mapInstance)"
   >
     <mapbox-source id="usgs" :options="sourceOptions" />
-    <mapbox-layer id="earthquakes" :options="layerOptions" />
+    <mapbox-cluster
+      data="https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson"
+      @mb-feature-click="openPopup($event)"
+      :unclusteredPointPaint="clusterOptions.unclusteredPointPaint"
+      :clustersPaint="clusterOptions.clustersPaint"
+      :clusterRadius="clusterOptions.clusterRadius"
+      :clusterMaxZoom="2"
+    />
+    <mapbox-popup
+      v-if="popup.isOpen"
+      :key="popup.position.join('-')"
+      :lng-lat="popup.position"
+      @mb-close="() => (popup.isOpen = false)"
+      className="popup"
+    >
+      <h1>{{ popup.data.title }}</h1>
+      <p>{{ popup.data.time }}</p>
+    </mapbox-popup>
   </mapbox-map>
 </template>
 
@@ -18,21 +47,90 @@ export default {
   data() {
     return {
       map: null,
+      mapCenter: [0, 0],
+      popup: {
+        isOpen: false,
+        position: [0, 0],
+        data: null,
+      },
       sourceOptions: {
         type: "geojson",
         data: "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson",
       },
-      layerOptions: {
-        type: "circle",
-        source: "usgs",
-        paint: {
-          "circle-radius": 8,
-          "circle-stroke-width": 1,
-          "circle-color": "red",
-          "circle-stroke-color": "white",
+      clusterOptions: {
+        unclusteredPointPaint: {
+          "circle-color": [
+            "step",
+            ["get", "mag"],
+            "#FFBB33",
+            2,
+            "#FF8800",
+            4,
+            "#ff4444",
+            6,
+            "#CC0000",
+            8,
+            "#C00000",
+          ],
+          "circle-radius": [
+            "step",
+            ["get", "mag"],
+            5,
+            2,
+            10,
+            4,
+            20,
+            6,
+            30,
+            8,
+            40,
+          ],
+        },
+        clustersPaint: {
+          "circle-color": [
+            "step",
+            ["get", "point_count"],
+            "#FFBB33",
+            50,
+            "#FF8800",
+            100,
+            "#ff4444",
+            750,
+            "#CC0000",
+            1000,
+            "#C00000",
+          ],
+          "circle-radius": 35,
         },
       },
     };
+  },
+  methods: {
+    async openPopup({ geometry, properties }) {
+      await this.$nextTick();
+
+      this.popup.position = [...geometry.coordinates];
+      this.popup.isOpen = true;
+
+      this.popup.data = Object.entries(properties).reduce(
+        (data, [key, value]) => {
+          try {
+            data[key] = value;
+
+            if (key === "time") {
+              // format time into readable date
+              data[key] = new Date(properties.time).toDateString();
+            }
+
+            return data;
+          } catch (err) {
+            console.log(err);
+          }
+          return data;
+        },
+        {}
+      );
+    },
   },
 };
 </script>
