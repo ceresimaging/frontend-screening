@@ -3,7 +3,7 @@
 <template>
   <v-form>
     <v-container>
-      <v-row>
+      <v-row class="mb-6">
         <v-menu
           ref="startDateMenu"
           v-model="startDateMenu"
@@ -21,7 +21,7 @@
               persistent-hint
               prepend-icon="mdi-calendar"
               v-bind="attrs"
-              @blur="startDate = parseDate(startDateFormatted)"
+              @blur="startDate = parseDate(startDateFormatted, `start`)"
               v-on="on"
             ></v-text-field>
           </template>
@@ -29,8 +29,11 @@
             v-model="startDate"
             no-title
             @input="startDateMenu = false"
+            :max="maxDate"
           ></v-date-picker>
         </v-menu>
+      </v-row>
+      <v-row class="mb-6">
         <v-menu
           ref="endDateMenu"
           v-model="endDateMenu"
@@ -48,7 +51,7 @@
               persistent-hint
               prepend-icon="mdi-calendar"
               v-bind="attrs"
-              @blur="endDate = parseDate(endDateFormatted)"
+              @blur="endDate = parseDate(endDateFormatted, `end`)"
               v-on="on"
             ></v-text-field>
           </template>
@@ -56,17 +59,18 @@
             v-model="endDate"
             no-title
             @input="endDateMenu = false"
+            :max="maxDate"
           ></v-date-picker>
         </v-menu>
       </v-row>
-      <v-row>
+      <v-row class="mb-6">
         <v-select
           :items="magnitudes"
           label="Min Magnitude"
           @change="setMinMag"
         ></v-select>
       </v-row>
-      <v-row>
+      <v-row class="mb-6">
         <v-select
           :items="magnitudes"
           label="Max Magnitude"
@@ -81,38 +85,46 @@
 export default {
   name: "MapForm",
 
-  data: (vm) => ({
+  data: () => ({
     startDateMenu: false,
     endDateMenu: false,
-    startDate: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
+    startDate: null,
+    startDateFormatted: null,
+    endDate: null,
+    endDateFormatted: null,
+    maxDate: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
       .toISOString()
       .substr(0, 10),
-    startDateFormatted: vm.formatDate(
-      new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
-        .toISOString()
-        .substr(0, 10)
-    ),
-    endDate: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
-      .toISOString()
-      .substr(0, 10),
-    endDateFormatted: vm.formatDate(
-      new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
-        .toISOString()
-        .substr(0, 10)
-    ),
     magnitudes: [1, 2, 3, 4, 5, 6, 7, 8, 9],
   }),
 
   methods: {
-    formatDate(date) {
+    formatDate(date, type) {
       if (!date) return null;
+
+      // validate start and end dates
+      if (
+        type === "start" &&
+        this.endDate &&
+        new Date(date) > new Date(this.endDate)
+      ) {
+        alert("Start date must be before end date");
+        return;
+      } else if (
+        type === "end" &&
+        this.startDate &&
+        new Date(date) < new Date(this.startDate)
+      ) {
+        alert("End date must be after start date");
+        return;
+      }
 
       const [year, month, day] = date.split("-");
       return `${month}/${day}/${year}`;
     },
     parseDate(date) {
       if (!date) return null;
-      console.log(date);
+
       const [month, day, year] = date.split("/");
       return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
     },
@@ -121,6 +133,19 @@ export default {
     },
     setMaxMag(mag) {
       this.$store.commit("setMaxMag", mag);
+    },
+  },
+
+  watch: {
+    startDate() {
+      this.startDateFormatted = this.formatDate(this.startDate, "start");
+
+      this.$store.commit("setStartDate", this.startDate);
+    },
+    endDate() {
+      this.endDateFormatted = this.formatDate(this.endDate, "end");
+
+      this.$store.commit("setEndDate", this.endDate);
     },
   },
 };

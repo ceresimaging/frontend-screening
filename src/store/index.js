@@ -28,6 +28,15 @@ const store = new Vuex.Store({
     newMinMag: (state) => {
       return state.minMag;
     },
+    newMaxMag: (state) => {
+      return state.maxMag;
+    },
+    newStartTime: (state) => {
+      return state.startDate;
+    },
+    newEndTime: (state) => {
+      return state.endDate;
+    },
   },
 });
 

@@ -141,23 +141,45 @@ export default {
     newMaxMag() {
       return this.$store.getters.newMaxMag;
     },
+    newStartTime() {
+      return this.$store.getters.newStartTime;
+    },
+    newEndTime() {
+      return this.$store.getters.newEndTime;
+    },
   },
   watch: {
     newMinMag(value) {
       this.minMag = value;
-      this.sourceOptions.data =
-        "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&minmagnitude=" +
-        value +
-        "&maxmagnitude=" +
-        (this.maxMag ? `&minmagnitude=${this.maxMag}` : "");
+
+      this.sourceOptions.data = `https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&minmagnitude=${value}&maxmagnitude=${
+        this.maxMag ? `&minmagnitude=${this.maxMag}` : ""
+      }`;
     },
     newMaxMag(value) {
       this.maxMag = value;
-      this.sourceOptions.data =
-        "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson" +
-        (this.minMag ? `&minmagnitude=${this.minMag}` : "") +
-        "&maxmagnitude=" +
-        value;
+
+      this.sourceOptions.data = `https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson${
+        this.minMag ? `&minmagnitude=${this.minMag}` : ""
+      }&maxmagnitude=${value}`;
+    },
+    newStartTime(value) {
+      this.startTime = value;
+
+      this.sourceOptions.data = `https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=${value}${
+        this.endTime ? `&endtime=${this.endTime}` : ""
+      }${this.minMag ? `&minmagnitude=${this.minMag}` : ""}&maxmagnitude=${
+        this.maxMag ? `&minmagnitude=${this.maxMag}` : ""
+      }`;
+    },
+    newEndTime(value) {
+      this.endTime = value;
+
+      this.sourceOptions.data = `https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson${
+        this.startTime ? `&starttime=${this.startTime}` : ""
+      }&endtime=${value}${
+        this.minMag ? `&minmagnitude=${this.minMag}` : ""
+      }&maxmagnitude=${this.maxMag ? `&minmagnitude=${this.maxMag}` : ""}`;
     },
   },
 };
