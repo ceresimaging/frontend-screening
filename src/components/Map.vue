@@ -20,7 +20,7 @@
   >
     <mapbox-source id="usgs" :options="sourceOptions" />
     <mapbox-cluster
-      data="https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson"
+      v-bind:data="sourceOptions.data"
       @mb-feature-click="openPopup($event)"
       :unclusteredPointPaint="clusterOptions.unclusteredPointPaint"
       :clustersPaint="clusterOptions.clustersPaint"
@@ -48,6 +48,8 @@ export default {
     return {
       map: null,
       mapCenter: [0, 0],
+      minMag: null,
+      maxMag: null,
       popup: {
         isOpen: false,
         position: [0, 0],
@@ -130,6 +132,32 @@ export default {
         },
         {}
       );
+    },
+  },
+  computed: {
+    newMinMag() {
+      return this.$store.getters.newMinMag;
+    },
+    newMaxMag() {
+      return this.$store.getters.newMaxMag;
+    },
+  },
+  watch: {
+    newMinMag(value) {
+      this.minMag = value;
+      this.sourceOptions.data =
+        "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&minmagnitude=" +
+        value +
+        "&maxmagnitude=" +
+        (this.maxMag ? `&minmagnitude=${this.maxMag}` : "");
+    },
+    newMaxMag(value) {
+      this.maxMag = value;
+      this.sourceOptions.data =
+        "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson" +
+        (this.minMag ? `&minmagnitude=${this.minMag}` : "") +
+        "&maxmagnitude=" +
+        value;
     },
   },
 };
