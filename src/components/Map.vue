@@ -48,6 +48,8 @@ export default {
     return {
       map: null,
       mapCenter: [0, 0],
+      startTime: null,
+      endTime: null,
       minMag: null,
       maxMag: null,
       popup: {
@@ -133,6 +135,13 @@ export default {
         {}
       );
     },
+    constructAPIURL() {
+      this.sourceOptions.data = `https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson${
+        this.startTime ? `&starttime=${this.startTime}` : ""
+      }${this.endTime ? `&endtime=${this.endTime}` : ""}${
+        this.minMag ? `&minmagnitude=${this.minMag}` : ""
+      }${this.maxMag ? `&maxmagnitude=${this.maxMag}` : ""}`;
+    },
   },
   computed: {
     newMinMag() {
@@ -147,39 +156,47 @@ export default {
     newEndTime() {
       return this.$store.getters.newEndTime;
     },
+    resetSearch() {
+      return this.$store.getters.resetSearch;
+    },
   },
   watch: {
     newMinMag(value) {
+      if (!value) return;
       this.minMag = value;
 
-      this.sourceOptions.data = `https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&minmagnitude=${value}&maxmagnitude=${
-        this.maxMag ? `&minmagnitude=${this.maxMag}` : ""
-      }`;
+      this.constructAPIURL();
     },
     newMaxMag(value) {
+      if (!value) return;
       this.maxMag = value;
 
-      this.sourceOptions.data = `https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson${
-        this.minMag ? `&minmagnitude=${this.minMag}` : ""
-      }&maxmagnitude=${value}`;
+      this.constructAPIURL();
     },
     newStartTime(value) {
+      if (!value) return;
       this.startTime = value;
 
-      this.sourceOptions.data = `https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=${value}${
-        this.endTime ? `&endtime=${this.endTime}` : ""
-      }${this.minMag ? `&minmagnitude=${this.minMag}` : ""}&maxmagnitude=${
-        this.maxMag ? `&minmagnitude=${this.maxMag}` : ""
-      }`;
+      this.constructAPIURL();
     },
     newEndTime(value) {
+      if (!value) return;
       this.endTime = value;
 
-      this.sourceOptions.data = `https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson${
-        this.startTime ? `&starttime=${this.startTime}` : ""
-      }&endtime=${value}${
-        this.minMag ? `&minmagnitude=${this.minMag}` : ""
-      }&maxmagnitude=${this.maxMag ? `&minmagnitude=${this.maxMag}` : ""}`;
+      this.constructAPIURL();
+    },
+    resetSearch(value) {
+      if (!value) return;
+
+      this.startTime = null;
+      this.endTime = null;
+      this.minMag = null;
+      this.maxMag = null;
+
+      this.sourceOptions.data =
+        "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson";
+
+      this.$store.commit("clearResetSearch");
     },
   },
 };

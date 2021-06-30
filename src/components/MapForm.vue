@@ -65,6 +65,7 @@
       </v-row>
       <v-row class="mb-6">
         <v-select
+          v-model="minMag"
           :items="magnitudes"
           label="Min Magnitude"
           @change="setMinMag"
@@ -72,12 +73,18 @@
       </v-row>
       <v-row class="mb-6">
         <v-select
+          v-model="maxMag"
           :items="magnitudes"
           label="Max Magnitude"
           @change="setMaxMag"
         ></v-select>
       </v-row>
     </v-container>
+    <v-row class="mb-6 d-flex justify-center">
+      <v-btn elevation="2" plain raised @click="clearSearch"
+        >Clear Search</v-btn
+      ></v-row
+    >
   </v-form>
 </template>
 
@@ -86,6 +93,8 @@ export default {
   name: "MapForm",
 
   data: () => ({
+    minMag: null,
+    maxMag: null,
     startDateMenu: false,
     endDateMenu: false,
     startDate: null,
@@ -134,6 +143,15 @@ export default {
     setMaxMag(mag) {
       this.$store.commit("setMaxMag", mag);
     },
+    clearSearch() {
+      this.$store.commit("resetSearch");
+    },
+  },
+
+  computed: {
+    resetSearch() {
+      return this.$store.getters.resetSearch;
+    },
   },
 
   watch: {
@@ -146,6 +164,16 @@ export default {
       this.endDateFormatted = this.formatDate(this.endDate, "end");
 
       this.$store.commit("setEndDate", this.endDate);
+    },
+    resetSearch(value) {
+      if (!value) return;
+
+      this.startDate = null;
+      this.startDateFormatted = null;
+      this.endDate = null;
+      this.endDateFormatted = null;
+      this.minMag = null;
+      this.maxMag = null;
     },
   },
 };

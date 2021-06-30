@@ -9,6 +9,7 @@ const store = new Vuex.Store({
     endDate: null,
     minMag: null,
     maxMag: null,
+    resetSearch: false,
   },
   mutations: {
     setStartDate(state, date) {
@@ -23,6 +24,15 @@ const store = new Vuex.Store({
     setMaxMag(state, mag) {
       state.maxMag = mag;
     },
+    resetSearch(state) {
+      for (let key in state) {
+        state[key] = null;
+      }
+      state.resetSearch = true;
+    },
+    clearResetSearch(state) {
+      state.resetSearch = false;
+    },
   },
   getters: {
     newMinMag: (state) => {
@@ -36,6 +46,9 @@ const store = new Vuex.Store({
     },
     newEndTime: (state) => {
       return state.endDate;
+    },
+    resetSearch: (state) => {
+      return state.resetSearch;
     },
   },
 });
