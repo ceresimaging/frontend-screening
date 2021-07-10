@@ -95,7 +95,6 @@
       hint="(whole numbers only)"
     >
     </v-slider>
-    <span></span>
   </v-col>
 </template>
 
@@ -103,14 +102,19 @@
 export default {
   name: "SidebarForm",
 
-  data: () => ({
-    startdate: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
-    enddate: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
-    startmodal: false,
-    endmodal: false,
-    minmag: { label: 'Minimum Magnitude:', val: 5.0, color: 'red' }
-  }),
-}
+  data() {
+    return {
+      minmag: { label: 'Minimum Magnitude:', val: 4, color: 'red' },
+      startdate: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
+      enddate: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
+      startmodal: false,
+      endmodal: false,
+      // this.starttime = startdate;
+      // this.endtime = enddate;
+    };
+  },
+
+};
 
 </script>
 
@@ -119,7 +123,7 @@ export default {
   margin: 2rem 0;
 }
 .v-input__control .v-messages__wrapper {
-  margin-top: -.5rem;
-  margin-left: .75rem;
+  margin-top: -0.5rem;
+  margin-left: 0.75rem;
 }
 </style>

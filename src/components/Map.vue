@@ -8,6 +8,13 @@
   >
     <mapbox-source id="usgs" :options="sourceOptions" />
     <mapbox-layer id="earthquakes" :options="layerOptions" />
+    <mapbox-popup 
+      :lng-lat="[10, 10]"
+    >
+      <p>Place</p>
+      <p>Magnitude</p>
+      <p>Time</p>
+    </mapbox-popup>
   </mapbox-map>
 </template>
 
@@ -31,6 +38,7 @@ export default {
           "circle-color": "red",
           "circle-stroke-color": "white",
         },
+        // filter: [ "minmagnitude", 5 ]
       },
     };
   },
