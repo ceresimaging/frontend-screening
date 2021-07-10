@@ -32,11 +32,11 @@ export default {
       sourceOptions: {
         type: "geojson",
         data: "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson",
-        filter: {
+        // filter: {
           // "starttime": this.startdate,
           // "endtime": this.enddate,
           // "minmagnitude": ['literal', {5}],
-        }
+        // }
       },
       layerOptions: {
         type: "circle",
