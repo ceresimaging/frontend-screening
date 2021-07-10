@@ -109,13 +109,10 @@ export default {
       enddate: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
       startmodal: false,
       endmodal: false,
-      // this.starttime = startdate;
-      // this.endtime = enddate;
     };
   },
 
 };
-
 </script>
 
 <style lang="scss" scoped>
