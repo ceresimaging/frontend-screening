@@ -32,6 +32,7 @@ export default {
       sourceOptions: {
         type: "geojson",
         data: "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson",
+/** from the Mapbox docs it looks like I should be able to magnitude and date range filters as a filter object of the source layer ... https://docs.mapbox.com/help/glossary/filter/  **/
         // filter: {
           // "starttime": this.startdate,
           // "endtime": this.enddate,
@@ -42,6 +43,7 @@ export default {
         type: "circle",
         source: "usgs",
         paint: {
+/** this seemed like a way to set the earthquake circle to be relative to its magnitude - doesn't work **/
           // "circle-radius": Math.pow(2, this.data.mag) / 2,
           "circle-radius": 8,
           "circle-stroke-width": 1,

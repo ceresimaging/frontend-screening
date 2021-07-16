@@ -2,6 +2,26 @@
 
 # FrontEnd Engineer Candidate Screening
 
+##### Questions/Stumbling points: #####
+Filtering the map by magnitude, or a date range:
+- see line 35 in Map.vue
+- I added a filter object, but it doesn't change the map
+- I could apend those paramters to the URL via Javascript, but this should be done thru Vue so it triggers Vue's reactivity system to update the map.
+
+Form:
+- added the form elements, but their values are not tied to the map and the related display values.
+- once I am able to manually update the map, for example by changing Filter values, I should then be able to use variables for the filter properties that are assigned thru user manipulation of the form elements.
+
+Magnitude display:
+- see line 45 in Map.vue
+- tried setting a Layer option prop to set the circle size to = the "mag" value from the API data.
+
+Individual Earthquake Pop-ups:
+- I found the Mapbox code to do part of this, but its not tied to each earthquake circle and is just a general pop-up in the middle of the screen, that is immediately rendered on page load. When you click it goes away until you refresh the page.
+- Not sure how to tie a popup to individual earthquakes. Didn't pursue this too much because I was going after the above.
+
+
+
 ### About the assignment
 
 - There's no right or wrong way to complete this challenge - we want to see how you solve problems!
