@@ -2,7 +2,7 @@
 
 # FrontEnd Engineer Candidate Screening
 
-##### Questions/Stumbling points: #####
+##### Stumbling points: #####
 Filtering the map by magnitude, or a date range:
 - see line 35 in Map.vue
 - I added a filter object, but it doesn't change the map
