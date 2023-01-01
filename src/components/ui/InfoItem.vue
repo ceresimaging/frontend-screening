@@ -1,7 +1,13 @@
 <template>
   <div>
-    <p :class="this.withMarginBottom ? 'with-margin-bottom' : 'no-margin'">
-      <b>{{ this.label }}:</b> {{ this.value }}
+    <p
+      :class="
+        this.withMarginBottom
+          ? 'text-body-2 with-margin-bottom'
+          : ' text-body-2 no-margin'
+      "
+    >
+      <b class="font-weight-bold">{{ this.label }}:</b> {{ this.value || '-' }}
     </p>
   </div>
 </template>

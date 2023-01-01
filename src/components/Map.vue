@@ -37,7 +37,7 @@
             :value="marker.properties.time"
             :withMarginBottom="true"
           />
-          <info-item label="Min Magnitude" :value="marker.properties.mag" />
+          <info-item label="Magnitude" :value="marker.properties.mag" />
         </div>
       </template>
     </MapboxMarker>
@@ -45,8 +45,6 @@
 </template>
 
 <script>
-// import mapboxgl from "mapbox-gl";
-
 import InfoItem from "./ui/InfoItem.vue";
 
 export default {
@@ -61,27 +59,6 @@ export default {
       map: null,
     };
   },
-
-  // methods: {
-  //   createMapMarkers(mapData, map) {
-  //     mapData.map((m) => {
-  //       // Create marker element and add styles styles
-  //       const el = document.createElement("div");
-  //       el.style.width = `${m.scale}px`;
-  //       el.style.height = `${m.scale}px`;
-  //       el.style.backgroundColor = "red";
-  //       el.style.borderRadius = "50%";
-
-  //       new mapboxgl.Marker(el)
-  //         .setLngLat([m.lng, m.lat]) // add coordenates
-  //         .setPopup(
-  //           new mapboxgl.Popup({ offset: 25 }) // add popup
-  //             .setHTML(`<h3>Title</h3><p>Description</p>`)
-  //         )
-  //         .addTo(map); // add marker to map
-  //     });
-  //   },
-  // },
 };
 </script>
 
