@@ -6,7 +6,7 @@
     :zoom="2"
     @mb-created="(mapInstance) => (map = mapInstance)"
   >
-    <mapbox-source id="usgs" :options="sourceOptions" />
+    <mapbox-source id="usgs" :options="dynamicSourceOptions" />
     <mapbox-layer id="earthquakes" :options="layerOptions" />
   </mapbox-map>
 </template>
@@ -14,6 +14,8 @@
 <script>
 export default {
   name: "Map",
+
+  props: ["dataUrl"],
 
   data() {
     return {
@@ -34,5 +36,13 @@ export default {
       },
     };
   },
+  computed: {
+    dynamicSourceOptions() {
+      let localOptions = Object.assign({}, this.sourceOptions); // Updating data.sourceOptions.data with the url received as prop
+      localOptions.data = this.dataUrl
+
+      return localOptions
+    } 
+  }
 };
 </script>
