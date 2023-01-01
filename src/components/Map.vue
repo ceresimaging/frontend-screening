@@ -6,6 +6,28 @@
     :zoom="2"
     @mb-created="(mapInstance) => (map = mapInstance)"
   >
+    <MapboxMarker :lng-lat="[0, 0]" popup>
+      <template v-slot:popup>
+        <p>Hello world!</p>
+      </template>
+    </MapboxMarker>
+
+    <MapboxMarker
+      v-for="marker in this.dummyData.markers"
+      :key="marker.text"
+      :lng-lat="[marker.lng, marker.lat]"
+      popup
+      color="red"
+      :scale="marker.scale"
+      
+    >
+      <v-icon slot="marker">mdi-calendar</v-icon>
+      
+      <template v-slot:popup>
+        <p>{{ marker.text }}</p>
+      </template>
+    </MapboxMarker>
+
     <mapbox-source id="usgs" :options="dynamicSourceOptions" />
     <mapbox-layer id="earthquakes" :options="layerOptions" />
   </mapbox-map>
@@ -19,6 +41,15 @@ export default {
 
   data() {
     return {
+      dummyData: {
+        markers: [
+          { lng: 1, lat: 1, text: "a", scale: 1 },
+          { lng: 20, lat: 20, text: "b", scale: 2 },
+          { lng: 30, lat: 30, text: "c", scale: 4 },
+          { lng: 60, lat: 60, text: "ddd", scale: 2 },
+        ],
+      },
+
       map: null,
       sourceOptions: {
         type: "geojson",
@@ -39,10 +70,21 @@ export default {
   computed: {
     dynamicSourceOptions() {
       let localOptions = Object.assign({}, this.sourceOptions); // Updating data.sourceOptions.data with the url received as prop
-      localOptions.data = this.dataUrl
+      localOptions.data = this.dataUrl;
 
-      return localOptions
-    } 
-  }
+      return localOptions;
+    },
+  },
 };
 </script>
+
+<style lang="scss" scoped>
+.my-icon {
+  border-radius: 100%;
+  width: 20px;
+  height: 20px;
+  text-align: center;
+  line-height: 20px;
+  color: white;
+}
+</style>
