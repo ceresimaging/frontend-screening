@@ -15,7 +15,6 @@
       </template>
       <v-date-picker
         v-model="formData.starttime"
-        color="green lighten-1"
         no-title
         :max="maxDate"
       ></v-date-picker>
@@ -23,14 +22,11 @@
 
     <!-- End Time -->
     <v-menu offset-y>
-      <template v-slot:activator="{ on, attrs }">
+      <template v-slot:activator="{ on }">
         <v-text-field
           readonly
           label="End Date"
           v-model="formattedEndDate"
-          color="primary"
-          dark
-          v-bind="attrs"
           v-on="on"
           prepend-inner-icon="mdi-calendar"
         >
@@ -38,7 +34,6 @@
       </template>
       <v-date-picker
         v-model="formData.endtime"
-        color="green lighten-1"
         no-title
         :min="this.formData.starttime"
         :max="maxDate"

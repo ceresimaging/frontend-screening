@@ -38,52 +38,12 @@ export default {
   },
 
   methods: {
-    formatData(rawData) {
-      // eslint-disable-next-line no-debugger
-      debugger;
-      console.log({ rawData });
-      return rawData.map((item) => {
-        // eslint-disable-next-line no-debugger
-        debugger;
-
-        console.log({ item });
-        const id = item.id;
-        const { mag, place, time } = item.properties;
-
-        const formattedItem = {
-          id,
-          coordinates: {
-            longitude: item.geometry.coordinates[0], // 0
-            latitude: item.geometry.coordinates[1], // 1
-          },
-          properties: {
-            mag,
-            place,
-            time,
-          },
-        };
-
-        console.log({ formattedItem });
-        return formattedItem;
-      });
-    },
     async fetchData(starttime, endtime, minmagnitude) {
-      console.log(
-        `https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=${starttime}&endtime=${endtime}&minmagnitude=${minmagnitude}`
-      );
-      // return (this.dataUrl = `https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=${starttime}&endtime=${endtime}&minmagnitude=${minmagnitude}`);
-
       fetch(
         `https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=${starttime}&endtime=${endtime}&minmagnitude=${minmagnitude}`
       )
         .then((response) => {
-          response
-            .json()
-            .then((res) => {
-              console.log("App", res);
-              return res;
-            })
-            .then((res) => (this.requestedData = res.features));
+          response.json().then((res) => (this.requestedData = res.features));
         })
         .catch((err) => {
           console.error(err);
