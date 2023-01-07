@@ -3,12 +3,16 @@
     <v-app-bar dark>
       <v-toolbar-title>Earthquakes Map</v-toolbar-title>
     </v-app-bar>
-    <div class="ma-4 grey--text">The form goes here...</div>
+    <Form></Form>
   </v-navigation-drawer>
 </template>
 
 <script>
+import Form from "./Form.vue";
 export default {
   name: "SideBar",
+  components: {
+    Form,
+  },
 };
 </script>
